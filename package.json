@@ -1,0 +1,15 @@
+{
+  "name": "myspotify",
+  "version": "1.0.0",
+  "description": "Sort Spotify playlist by popularity",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Terrence Hyland",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "express": "^4.17.1"
+  }
+}
