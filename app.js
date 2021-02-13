@@ -1,6 +1,8 @@
 const express = require('express'); // Express web server framework
 // const { request } = require('http');
-const axios = require('axios');
+const fetch = require('node-fetch');
+const { URLSearchParams } = require('url');
+const { config } = require('./config.js');
 const querystring = require('querystring');
 const app = express();
 
@@ -27,7 +29,7 @@ app.get('/login', (req, res) => {
 
     // your application requests authorization
     const state = generateRandomString(16);
-    const scope = 'user-read-private user-read-email';
+    const scope = 'user-read-private user-read-email playlist-read-private';
     res.redirect('https://accounts.spotify.com/authorize?' +
         querystring.stringify({
             response_type: 'code',
@@ -36,35 +38,121 @@ app.get('/login', (req, res) => {
             redirect_uri: redirect_uri,
             state: state
         }));
-
-
 });
 
-app.get('/callback', (req, res) => {
+app.get('/callback', async (req, res) => {
 
     const code = req.query.code;
     const state = req.query.state;
 
-    axios({
+    const params = new URLSearchParams({
+        code: code,
+        redirect_uri: redirect_uri,
+        grant_type: 'authorization_code'
+    });
+
+    const body = {
         method: 'post',
-        url: 'https://accounts.spotify.com/api/token',
-        params: {
-            code: code,
-            redirect_uri: redirect_uri,
-            grant_type: 'authorization_code'
-        },
+        body: params,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': 'Basic ' + (Buffer.from(client_id + ':' + client_secret).toString('base64'))
         }
-    })
-    .then(res => {
-        access_token = res.data.access_token;
-        refresh_token = res.data.refresh_token;
-        })    
+    };
+
+    const fetch_response = await fetch('https://accounts.spotify.com/api/token', body);
+    const json = await fetch_response.json();
+    access_token = json.access_token;
+    refresh_token = json.refresh_token;
+    res.redirect('/playlists.html');
+    // .then(res => res.json())
+    // .then(json => {
+    //     console.log(json);
+    //     access_token = json.access_token;
+    //     refresh_token = json.refresh_token;
+    // }).then(res.redirect('/playlists.html'))
+    // res.redirect('/playlists.html');
 });
 
 app.get('/tokens', (req, res) => {
-    console.log(req);
-    res.send(access_token);
+    // res.send("testing");
+    res.json({
+        'access_token': access_token,
+        'refresh_token': refresh_token
+    });
+})
+
+app.get('/userInfo/:tokens', async (req, res) => {
+    const tokens = req.params.tokens.split(',');
+    const user_access_token = tokens[0];
+    const user_refresh_token = tokens[1];
+
+    let userInfo;
+
+    const body = {
+        method: 'get',
+        headers: {
+            'Authorization' : 'Bearer ' + user_access_token
+        }
+    };
+
+    const fetch_response = await fetch('https://api.spotify.com/v1/me', body);
+    const json = await fetch_response.json();
+    res.json(json);
+
+})
+
+app.get('/userPlaylists/:tokens', async (req, res) => {
+    const tokens = req.params.tokens.split(',');
+    const user_access_token = tokens[0];
+    const user_refresh_token = tokens[1];
+
+    const body = {
+        method: 'get',
+        headers: {
+            'Authorization' : 'Bearer ' + user_access_token
+        }
+    };
+
+    const fetch_response = await fetch('https://api.spotify.com/v1/me/playlists', body);
+    const json = await fetch_response.json()
+    res.json(json);
+})
+
+app.get('/playlistTracks/:tokens/:playlistID', async (req, res) => {
+    const tokens = req.params.tokens.split(',');
+    const user_access_token = tokens[0];
+    const user_refresh_token = tokens[1];
+    const playlistID = req.params.playlistID;
+
+    const body = {
+        method: 'get',
+        headers: {
+            'Authorization' : 'Bearer ' + user_access_token
+        }
+    };
+
+    const fetch_response = await fetch(`https://api.spotify.com/v1/playlists/${playlistID}/tracks?market=US&fields=items(track(id))`, body);
+    const json = await fetch_response.json()
+    res.json(json);
+})
+
+app.get('/trackInfo/:tokens/:tracks', async (req, res) => {
+    const tokens = req.params.tokens.split(',');
+    const user_access_token = tokens[0];
+    const user_refresh_token = tokens[1];
+    const tracks = req.params.tracks;
+    console.log(tracks);
+
+    const body = {
+        method: 'get',
+        headers: {
+            'Authorization' : 'Bearer ' + user_access_token
+        }
+    };
+
+    const fetch_response = await fetch(`https://api.spotify.com/v1/tracks?ids=${tracks}`, body);
+    const json = await fetch_response.json()
+    console.log(json);
+    res.json(json);
 })
