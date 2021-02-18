@@ -9,8 +9,6 @@ const app = express();
 const client_id = config.CLIENT_ID; // Your client id
 const client_secret = config.CLIENT_SECRET; // Your secret
 const redirect_uri = config.REDIRECT_URI; // Your redirect uri
-let access_token;
-let refresh_token;
 
 app.listen(8888, () => console.log('Spotify Poppin listening at https://localhost:8888'));
 app.use(express.static('public'));
@@ -30,14 +28,15 @@ app.get('/login', (req, res) => {
     // your application requests authorization
     const state = generateRandomString(16);
     const scope = 'user-read-private user-read-email playlist-read-private';
-    res.redirect('https://accounts.spotify.com/authorize?' +
-        querystring.stringify({
-            response_type: 'code',
-            client_id: client_id,
-            scope: scope,
-            redirect_uri: redirect_uri,
-            state: state
-        }));
+    let queryString = querystring.stringify({
+                response_type: 'code',
+                client_id: client_id,
+                scope: scope,
+                redirect_uri: redirect_uri,
+                state: state
+            })
+    // res.redirect('https://accounts.spotify.com/authorize?' + queryString);
+    res.json({'redirect' : 'https://accounts.spotify.com/authorize?' + queryString});
 });
 
 app.get('/callback', async (req, res) => {
@@ -64,7 +63,19 @@ app.get('/callback', async (req, res) => {
     const json = await fetch_response.json();
     access_token = json.access_token;
     refresh_token = json.refresh_token;
-    res.redirect('/playlists.html');
+
+    // res.json({
+    //     'access_token': access_token, 
+    //     'response_token': refresh_token
+    // });
+
+    res.redirect('/playlists.html?' + 
+        querystring.stringify({
+            access_token: json.access_token,
+            refresh_token: json.refresh_token
+        }));
+
+    // res.redirect('/playlists.html');
     // .then(res => res.json())
     // .then(json => {
     //     console.log(json);
@@ -73,14 +84,6 @@ app.get('/callback', async (req, res) => {
     // }).then(res.redirect('/playlists.html'))
     // res.redirect('/playlists.html');
 });
-
-app.get('/tokens', (req, res) => {
-    // res.send("testing");
-    res.json({
-        'access_token': access_token,
-        'refresh_token': refresh_token
-    });
-})
 
 app.get('/userInfo/:tokens', async (req, res) => {
     const tokens = req.params.tokens.split(',');
@@ -142,7 +145,6 @@ app.get('/trackInfo/:tokens/:tracks', async (req, res) => {
     const user_access_token = tokens[0];
     const user_refresh_token = tokens[1];
     const tracks = req.params.tracks;
-    console.log(tracks);
 
     const body = {
         method: 'get',
@@ -152,7 +154,24 @@ app.get('/trackInfo/:tokens/:tracks', async (req, res) => {
     };
 
     const fetch_response = await fetch(`https://api.spotify.com/v1/tracks?ids=${tracks}`, body);
-    const json = await fetch_response.json()
-    console.log(json);
+    const json = await fetch_response.json();
+    res.json(json);
+})
+
+app.get('/trackFeatures/:tokens/:tracks', async (req, res) => {
+    const tokens = req.params.tokens.split(',');
+    const user_access_token = tokens[0];
+    const user_refresh_token = tokens[1];
+    const tracks = req.params.tracks;
+
+    const body = {
+        method: 'get',
+        headers: {
+            'Authorization' : 'Bearer ' + user_access_token
+        }
+    };
+
+    const fetch_response = await fetch(`https://api.spotify.com/v1/audio-features?ids=${tracks}`, body);
+    const json = await fetch_response.json();
     res.json(json);
 })

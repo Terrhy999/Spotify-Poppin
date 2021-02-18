@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src='script.js'></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body onload="onLoadTracks()">
+    <div>
+        <button id="energy" onclick="sortTracks('energy', 'audio_features')">Energy</button>
+        <button id="valence" onclick="sortTracks('valence', 'audio_features')">Valence</button>
+        <button onclick="sortTracks('danceability', 'audio_features')">Danceability</button>
+        <button onclick="sortTracks('instrumentalness', 'audio_features')">Instrumentalness</button>
+        <button onclick="sortTracks('popularity', 'tracks')">Popularity</button>
+    </div>
+    <div>
+        <h1>Your Songs</h1>
+        <ul id="tracks">
+        </ul>
+    </div>
+</body>
+</html>
