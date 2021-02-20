@@ -5,6 +5,7 @@ const { URLSearchParams } = require('url');
 const { config } = require('./config.js');
 const querystring = require('querystring');
 const app = express();
+const bodyParser = require('body-parser');
 
 const client_id = config.CLIENT_ID; // Your client id
 const client_secret = config.CLIENT_SECRET; // Your secret
@@ -12,6 +13,7 @@ const redirect_uri = config.REDIRECT_URI; // Your redirect uri
 
 app.listen(8888, () => console.log('Spotify Poppin listening at https://localhost:8888'));
 app.use(express.static('public'));
+app.use(bodyParser.text());    
 
 var generateRandomString = function (length) {
     var text = '';
@@ -105,10 +107,12 @@ app.get('/userInfo/:tokens', async (req, res) => {
 
 })
 
-app.get('/userPlaylists/:tokens', async (req, res) => {
+app.get('/userPlaylists/:tokens/:offset', async (req, res) => {
+    let offset = req.params.offset;
     const tokens = req.params.tokens.split(',');
     const user_access_token = tokens[0];
     const user_refresh_token = tokens[1];
+
 
     const body = {
         method: 'get',
@@ -117,7 +121,8 @@ app.get('/userPlaylists/:tokens', async (req, res) => {
         }
     };
 
-    const fetch_response = await fetch('https://api.spotify.com/v1/me/playlists', body);
+
+    const fetch_response = await fetch(`https://api.spotify.com/v1/me/playlists?limit=50&offset=${offset}`, body);
     const json = await fetch_response.json()
     res.json(json);
 })
@@ -128,6 +133,8 @@ app.get('/playlistTracks/:tokens/:playlistID', async (req, res) => {
     const user_refresh_token = tokens[1];
     const playlistID = req.params.playlistID;
 
+    let tracks;
+
     const body = {
         method: 'get',
         headers: {
@@ -135,43 +142,91 @@ app.get('/playlistTracks/:tokens/:playlistID', async (req, res) => {
         }
     };
 
-    const fetch_response = await fetch(`https://api.spotify.com/v1/playlists/${playlistID}/tracks?market=US&fields=items(track(id))`, body);
+    const fetch_response = await fetch(`https://api.spotify.com/v1/playlists/${playlistID}/tracks?market=US&fields=items(track(id)),total,offset,limit`, body);
     const json = await fetch_response.json()
-    res.json(json);
+
+    tracks = json;
+
+
+    const total = json.total;
+    
+    for (let i = 1; i < Math.ceil(total/100); i++) {
+        let offset = i*100;
+        const new_fetch_response = await fetch(`https://api.spotify.com/v1/playlists/${playlistID}/tracks?market=US&fields=items(track(id))&offset=${offset}`, body);
+        const json = await new_fetch_response.json();
+        const new_tracks = json.items;
+        tracks.items.push(...new_tracks);
+    }
+
+
+    res.json(tracks);
+
+
 })
 
-app.get('/trackInfo/:tokens/:tracks', async (req, res) => {
+app.post('/trackInfo/:tokens', async (req, res) => {
     const tokens = req.params.tokens.split(',');
     const user_access_token = tokens[0];
     const user_refresh_token = tokens[1];
-    const tracks = req.params.tracks;
+    let tracksString = req.body;
 
-    const body = {
+    let tracksArray = tracksString.split(',');
+
+    let requestNumber = Math.ceil((tracksArray.length/50));
+    
+    let tracks = [];
+
+    const fetch_body = {
         method: 'get',
         headers: {
             'Authorization' : 'Bearer ' + user_access_token
         }
     };
 
-    const fetch_response = await fetch(`https://api.spotify.com/v1/tracks?ids=${tracks}`, body);
-    const json = await fetch_response.json();
-    res.json(json);
+    for (let i = 0; i < requestNumber; i++) {
+        let fetch_array = tracksArray.slice(i*50, (i+1)*50);
+        // console.log(fetch_array);
+        let fetch_tracks = fetch_array.toString();
+        const fetch_response = await fetch(`https://api.spotify.com/v1/tracks?ids=${fetch_tracks}`, fetch_body);
+        const json = await fetch_response.json();
+        const response_tracks = json.tracks;
+        tracks.push(...response_tracks);
+    }
+    res.json(tracks);
+
+
+    // const fetch_response = await fetch(`https://api.spotify.com/v1/tracks?ids=${tracks}`, fetch_body);
+    // const json = await fetch_response.json();
+    // res.json(json);
 })
 
-app.get('/trackFeatures/:tokens/:tracks', async (req, res) => {
+app.post('/trackFeatures/:tokens', async (req, res) => {
     const tokens = req.params.tokens.split(',');
     const user_access_token = tokens[0];
     const user_refresh_token = tokens[1];
-    const tracks = req.params.tracks;
+    let tracksString = req.body;
 
-    const body = {
+    let tracksArray = tracksString.split(',');
+    
+    let requestNumber = Math.ceil((tracksArray.length/100));
+
+    let tracks = [];
+
+    const fetch_body = {
         method: 'get',
         headers: {
             'Authorization' : 'Bearer ' + user_access_token
         }
     };
 
-    const fetch_response = await fetch(`https://api.spotify.com/v1/audio-features?ids=${tracks}`, body);
-    const json = await fetch_response.json();
-    res.json(json);
+    for (let i = 0; i < requestNumber; i++) {
+        let fetch_array = tracksArray.slice(i*100, (i+1)*100);
+        let fetch_tracks = fetch_array.toString();
+        const fetch_response = await fetch(`https://api.spotify.com/v1/audio-features?ids=${fetch_tracks}`, fetch_body);
+        const json = await fetch_response.json();
+        const response_tracks = json.audio_features;
+        tracks.push(...response_tracks);
+    }
+
+    res.json(tracks);
 })

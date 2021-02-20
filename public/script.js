@@ -13,11 +13,14 @@ const login = async () => {
 }
 
 function getURLParams() {
-    let params = new URLSearchParams(window.location.search.substring(1));
-    let user_access_token = params.get("access_token");
-    let user_refresh_token = params.get("refresh_token");
-    localStorage.setItem('access_token', user_access_token);
-    localStorage.setItem('refresh_token', user_refresh_token);
+    if(localStorage.getItem("access_token") === null) {
+        let params = new URLSearchParams(window.location.search.substring(1));
+        let user_access_token = params.get("access_token");
+        let user_refresh_token = params.get("refresh_token");
+        localStorage.setItem('access_token', user_access_token);
+        localStorage.setItem('refresh_token', user_refresh_token);
+    }
+    
     access_token = localStorage.getItem('access_token');
     refresh_token = localStorage.getItem('refresh_token');
 }
@@ -29,8 +32,8 @@ const getUserInfo = async () => {
     return json;
 }
 
-const getUserPlaylists = async () => {
-    const fetch_response = await fetch(`/userPlaylists/${access_token},${refresh_token}`);
+const getUserPlaylists = async (offset) => {
+    const fetch_response = await fetch(`/userPlaylists/${access_token},${refresh_token}/${offset}`);
     const json = await fetch_response.json();
     return json;
 }
@@ -44,7 +47,7 @@ const getUserPlaylists = async () => {
 
 const onLoad = async() => {
     getURLParams();
-    let playlists = await getUserPlaylists();
+    let playlists = await getUserPlaylists(0);
     playlists = playlists.items;
     populatePlaylists(playlists);
 }
@@ -60,11 +63,12 @@ function getTrackURLParams() {
 const onLoadTracks = async() => {
     const playlistID = getTrackURLParams();
     const trackIDs = await getTracks(playlistID);
-    const currentTrackInfo = await trackInfo(trackIDs);
-    const currentTrackFeatures = await trackFeatures(trackIDs);
-    playlistTrackInfo.tracks = currentTrackInfo.tracks;
-    playlistTrackInfo.audio_features = currentTrackFeatures.audio_features;
-    const tracks = currentTrackInfo.tracks;
+    const filteredTrackIDs = trackIDs.filter(track => track != null);
+    const currentTrackInfo = await trackInfo(filteredTrackIDs);
+    const currentTrackFeatures = await trackFeatures(filteredTrackIDs);
+    playlistTrackInfo.tracks = currentTrackInfo;
+    playlistTrackInfo.audio_features = currentTrackFeatures;
+    const tracks = playlistTrackInfo.tracks;
     populateTracks(tracks);
 }
 
@@ -96,24 +100,29 @@ function populateTracks(list) {
 const getTracks = async (playlistID) => {
     const fetch_response = await fetch(`/playlistTracks/${access_token},${refresh_token}/${playlistID}`);
     const json = await fetch_response.json();
-    console.log(json);
     const tracks = json.items;
     return getTrackIDs(tracks);
 }
 
 const trackInfo = async (tracksArray) => {
     const tracksString = tracksArray.toString();
-    const fetch_response = await fetch(`/trackInfo/${access_token},${refresh_token}/${tracksString}`);
+    const fetch_response = await fetch(`/trackInfo/${access_token},${refresh_token}`, {
+        method: 'post',
+        'content-type': 'text/plain',
+        body: tracksString 
+    });
     const json = await fetch_response.json();
-    console.log(json);
     return json;
 }
 
 const trackFeatures = async (tracks) => {
     const tracksString = tracks.toString();
-    const fetch_response = await fetch(`/trackFeatures/${access_token},${refresh_token}/${tracksString}`);
+    const fetch_response = await fetch(`/trackFeatures/${access_token},${refresh_token}`, {
+        method: 'post',
+        'content-type': 'text/plain',
+        body: tracksString
+    });
     const json = await fetch_response.json();
-    // console.log(json);
     return json;
 }
 
