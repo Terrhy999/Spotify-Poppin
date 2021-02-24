@@ -4,12 +4,26 @@
     <meta charset="UTF-8">
     <script type="text/javascript" src="script.js"></script>
     <script type='text/javascript' src='config.js'></script>
+    <link rel='stylesheet' href="normalize.css">
+    <link rel='stylesheet' href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Poppin'</title>
+    <title>What's Poppin'</title>
 </head>
 <body>
-    <div>
-        <p onclick="login()">Log in with Spotify</p>
+    <div class="navBar">
+        <ul>
+            <li><a href="index.html">What's Poppin</a></li>
+        </ul>
+    </div>
+
+    <div class="container center">
+        <h1>What's Poppin</h1>
+        <p>What's Poppin helps you sort your Spotify playlists. You can sort by Popularity, Danceability, Valence and more!
+            Use the button below to log in to your Spotify Account and get to sorting!</p>
+    </div>
+
+    <div id="button" class="container center">
+        <button onclick="login()">Login with Spotify</button>
     </div>
 </body>
 </html>

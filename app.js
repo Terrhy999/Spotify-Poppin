@@ -230,3 +230,26 @@ app.post('/trackFeatures/:tokens', async (req, res) => {
 
     res.json(tracks);
 })
+
+app.get('/refreshToken/:refreshToken', async (req, res) => {
+    const refreshToken = req.params.refreshToken;
+
+    const params = new URLSearchParams({
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken
+    });
+
+    const fetch_body = {
+        method: 'post',
+        body: params,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Basic ' + (Buffer.from(client_id + ':' + client_secret).toString('base64'))
+        }
+    };
+
+    const fetch_response = await fetch('https://accounts.spotify.com/api/token', fetch_body);
+    const json = await fetch_response.json();
+    res.json(json);
+
+})
