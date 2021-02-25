@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400&display=swap');
+
+/* || Elements */
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+body {
+    font-family: 'Merriweather', sans-serif;
+}
+
+/* || Spotify Button */
+
+.spotify-button {
+    background-color: green;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    font-size: 20px;
+    border-radius: 50px;
+    transition: 0.5s;
+}
+
+.spotify-button:hover {
+    background-color: rgb(0, 170, 0);
+    transition: 0.5s;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.spotify-button:active {
+    background-color: green;
+    transition: 0.25s;
+}
+
+/* || Playlist List Item */
+
+.playlist-item {
+    display: grid;
+    grid-template-columns: 50px 50px auto 215px;
+    grid-template-rows: 50px 50px;
+
+    grid-template-areas: 
+        "thumbnail thumbnail playlist-info tracks-button"
+        "thumbnail thumbnail playlist-description tracks-button";
+
+    margin-bottom: 50px;
+    background-color: rgb(83, 83, 83);
+}
+
+.playlist-item p {
+    margin: 0;
+    padding: 0;
+}
+
+.playlist-item h4 {
+    padding: 0;
+    margin: 0;
+}
+
+.playlist-item button {
+    grid-area: tracks-button;
+    justify-self: center;
+    align-self: center;
+}
+
+/* || Thumbnail Playlist Pictures */
+
+.thumbnail {
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 5px;
+    margin: 5px;
+    width: 75px;
+    grid-area: thumbnail;
+}
+
+/* || Wrapper */
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.wrapper > * {
+    padding: 20px;
+}
+
+/* || Header */
+
+.page-header nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* .page-header ul {
+    display: flex;
+    order: 1;
+    width: 100%;
+    margin-top: 15px;
+} */
+
+/* @media screen and (min-width: 550px) {
+    .page-header ul {
+        width: auto;
+        margin-top: 0;
+    }
+} */
+
+/* || Main Home */
+
+.page-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+    min-height: 350px;
+    background: url(images/home-background.jpg) no-repeat center / cover;
+    color: white;
+}
+
+.page-main div {
+    max-width: 500px;
+}
+
+@media screen and (min-width: 768px) {
+    .page-main {
+        padding-left: 90px;
+    }
+}
+
+/* || Main Playlist */
+
+.playlist-main {
+    display: flex;
+    flex-direction: column;
+    background: url(images/home-background.jpg) no-repeat center / cover;
+    color: white;
+}
+
+.playlist-main div {
+    max-width: 1000px;
+}
+
+/* || Footer */
+
+.page-footer {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.page-footer ul {
+    display: flex;
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+@media screen and (min-width: 550px) {
+    .page-footer {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .page-footer ul {
+        margin-bottom: 0;
+    }
+}

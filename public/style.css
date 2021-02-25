@@ -1,3 +1,15 @@
+/* || Element Styles */
+
+p {
+    font-size: 20px;
+    font-family: 'Merriweather';
+}
+
+h1 {
+    font-family: 'Merriweather';
+    font-weight: bold;
+}
+
 /* || Table Styles */
 
 table, th, td {
@@ -38,21 +50,30 @@ th:hover {
     display: inline-block;
 }
 
+/* FlexBox Position */
+
+.center {
+    text-align: center;
+    justify-content: center;
+}
+
 /* || FlexBox Container Styles */
 
 .container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
 }
 
-.center.container {
-    align-items: center;
-    text-align: center;
+/* || Wrapper Styles */
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-.container p {
-    font-size: 20px;
+.wrapper > {
+    padding: 20px;
 }
 
 /* || Spotify Button Syles */

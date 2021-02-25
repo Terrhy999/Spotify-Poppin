@@ -5,25 +5,50 @@
     <script type="text/javascript" src="script.js"></script>
     <script type='text/javascript' src='config.js'></script>
     <link rel='stylesheet' href="normalize.css">
-    <link rel='stylesheet' href="style.css">
+    <link rel='stylesheet' href="styles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>What's Poppin'</title>
 </head>
 <body>
-    <div class="navBar">
-        <ul>
-            <li><a href="index.html">What's Poppin</a></li>
-        </ul>
+    <div class="wrapper">
+
+        <header class="page-header">
+            <nav>
+                <h2 class="logo">
+                    What's Poppin
+                </h2>
+            </nav>
+        </header>
+
+        <main class="page-main">
+            
+            <div>
+
+                <h1>What's Poppin</h1>
+    
+                <p>What's Poppin helps you sort your Spotify playlists. You can sort by Popularity, Danceability, Valence and more!
+                    Use the button below to log in to your Spotify Account and get to sorting!
+                </p>
+    
+                <button class="spotify-button" onclick="login()">Login with Spotify</button>
+
+            </div>
+
+        </main>
+
+        <footer class = "page-footer">
+            <small>
+                Copyright and all that Jazz
+            </small>
+            <ul>
+                <li>Contact 1</li>
+                <li>Contact 2</li>
+                <li>Contact 3</li>
+                <li>Contact 4</li>
+            </ul>
+        </footer>
+
     </div>
 
-    <div class="container center">
-        <h1>What's Poppin</h1>
-        <p>What's Poppin helps you sort your Spotify playlists. You can sort by Popularity, Danceability, Valence and more!
-            Use the button below to log in to your Spotify Account and get to sorting!</p>
-    </div>
-
-    <div id="button" class="container center">
-        <button onclick="login()">Login with Spotify</button>
-    </div>
 </body>
 </html>
