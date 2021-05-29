@@ -42,31 +42,18 @@ body {
 
 .playlist-item {
     display: grid;
-    grid-template-columns: 50px 50px auto 215px;
-    grid-template-rows: 50px 50px;
+    grid-template-columns: repeat( auto-fill, minmax(250px, 1fr));
+}
 
-    grid-template-areas: 
-        "thumbnail thumbnail playlist-info tracks-button"
-        "thumbnail thumbnail playlist-description tracks-button";
-
-    margin-bottom: 50px;
-    background-color: rgb(83, 83, 83);
+.playlist-item div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .playlist-item p {
     margin: 0;
     padding: 0;
-}
-
-.playlist-item h4 {
-    padding: 0;
-    margin: 0;
-}
-
-.playlist-item button {
-    grid-area: tracks-button;
-    justify-self: center;
-    align-self: center;
 }
 
 /* || Thumbnail Playlist Pictures */
@@ -76,8 +63,7 @@ body {
     border-radius: 4px;
     padding: 5px;
     margin: 5px;
-    width: 75px;
-    grid-area: thumbnail;
+    width: 150px;
 }
 
 /* || Wrapper */
@@ -144,10 +130,6 @@ body {
     flex-direction: column;
     background: url(images/home-background.jpg) no-repeat center / cover;
     color: white;
-}
-
-.playlist-main div {
-    max-width: 1000px;
 }
 
 /* || Footer */
