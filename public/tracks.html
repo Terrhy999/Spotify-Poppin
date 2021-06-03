@@ -3,31 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <script src='script.js'></script>
-    <link rel='stylesheet' href="style.css">
+    <link rel='stylesheet' href="styles.css">
     <link rel='stylesheet' href="normalize.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <body onload="onLoadTracks()">
-    <div>
-        <a href="/playlists.html">Playlists</a>
-    </div>
-    <div>
-        <h1>Your Songs</h1>
-        <ul id="tracks">
-        </ul>
-    </div>
-    <div>
-        <table id="tracksTable">
-            <tr>
-                <th onclick="trackSort(0)">Song Name</th>
-                <th onclick="trackSort(1)">Energy</th>
-                <th onclick="trackSort(2)">Valence</th>
-                <th onclick="trackSort(3)">Danceability</th>
-                <th onclick="trackSort(4)">Instrumentalness</th>
-                <th onclick="trackSort(5)">Popularity</th>
-            </tr>
-        </table>
+    <div class="wrapper">
+
+        <header class="page-header">
+            <nav>
+                <h2 class="logo">
+                    <a href=index.html>What's Poppin</a>
+                </h2>
+                <h2>
+                    <a href=playlists.html>Playlists</a>
+                </h2>
+            </nav>
+        </header>
+
+        <main class="playlist-main">
+            <div>
+                <table>
+                    <thead>
+                        <th onclick="trackSort(0)">Song Name</th>
+                        <th onclick="trackSort(1)">Energy</th>
+                        <th onclick="trackSort(2)">Valence</th>
+                        <th onclick="trackSort(3)">Danceability</th>
+                        <th onclick="trackSort(4)">Instrumentalness</th>
+                        <th onclick="trackSort(5)">Popularity</th>
+                    </thead>
+                    <tbody id="tracksTable">
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <footer class = "page-footer">
+            <small>
+                Copyright and all that Jazz
+            </small>
+            <ul>
+                <li>Contact 1</li>
+                <li>Contact 2</li>
+                <li>Contact 3</li>
+                <li>Contact 4</li>
+            </ul>
+        </footer>
     </div>
 </body>
 </html>
