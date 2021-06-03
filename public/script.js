@@ -89,12 +89,34 @@ const onLoadTracks = async () => {
 
 
 function populatePlaylists(list) {
-    let element = document.getElementById('playlists');
+    console.log(list);
+    let element = document.getElementById('playlist');
     for (let i = 0; i < list.length; i++) {
         let li = document.createElement('li');
-        li.appendChild(document.createTextNode(list[i].name));
+        let div = document.createElement('div');
+        let p = document.createElement('p');
+        let img = document.createElement('img');
+
+        li.appendChild(div);
+        div.appendChild(img);
+        div.appendChild(p);
+
+        img.className = "thumbnail";
+
+        if(list[i].images.length == 0) {
+            img.src = "https://i.scdn.co/image/ab67706c0000bebbfefc703f51d6751af805865a";
+        }
+        else {
+            img.src = list[i].images[0].url;
+        }
+
+        p.textContent = list[i].name;
+
+        div.className = "playlist-item";
+
+        // li.appendChild(document.createTextNode(list[i].name));
         li.id = list[i].id;
-        li.addEventListener('click', () => tracksRedirect(li.id));
+        img.addEventListener('click', () => tracksRedirect(li.id));
         element.appendChild(li);
     }
 }
@@ -194,11 +216,7 @@ function trackSort(sortIndex) {
     let table = document.getElementById('tracksTable');
     let rows = table.rows;
     let rowsArray = Array.from(rows);
-    rowsArray.shift();
-
-
-
-
+    // rowsArray.shift();
 
     if (rowsArray[0].cells[sortIndex].dataset.sortOrder) {
 
