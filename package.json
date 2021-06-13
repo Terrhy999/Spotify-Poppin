@@ -15,5 +15,13 @@
     "nedb": "^1.8.0",
     "node-fetch": "^2.6.1"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Terrhy999/Spotify-Poppin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Terrhy999/Spotify-Poppin/issues"
+  },
+  "homepage": "https://github.com/Terrhy999/Spotify-Poppin#readme"
 }
