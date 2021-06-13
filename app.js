@@ -11,7 +11,9 @@ const client_id = config.CLIENT_ID; // Your client id
 const client_secret = config.CLIENT_SECRET; // Your secret
 const redirect_uri = config.REDIRECT_URI; // Your redirect uri
 
-app.listen(8888, () => console.log('Spotify Poppin listening at https://localhost:8888'));
+const PORT = process.env.PORT || 8888
+
+app.listen(PORT, () => console.log('Spotify Poppin listening at https://localhost:8888'));
 app.use(express.static('public'));
 app.use(bodyParser.text());    
 
