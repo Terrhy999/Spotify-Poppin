@@ -39,7 +39,6 @@ app.get('/login', (req, res) => {
                 redirect_uri: redirect_uri,
                 state: state
             })
-    // res.redirect('https://accounts.spotify.com/authorize?' + queryString);
     res.json({'redirect' : 'https://accounts.spotify.com/authorize?' + queryString});
 });
 
@@ -68,10 +67,6 @@ app.get('/callback', async (req, res) => {
     access_token = json.access_token;
     refresh_token = json.refresh_token;
 
-    // res.json({
-    //     'access_token': access_token, 
-    //     'response_token': refresh_token
-    // });
 
     res.redirect('/playlists.html?' + 
         querystring.stringify({
@@ -79,14 +74,6 @@ app.get('/callback', async (req, res) => {
             refresh_token: json.refresh_token
         }));
 
-    // res.redirect('/playlists.html');
-    // .then(res => res.json())
-    // .then(json => {
-    //     console.log(json);
-    //     access_token = json.access_token;
-    //     refresh_token = json.refresh_token;
-    // }).then(res.redirect('/playlists.html'))
-    // res.redirect('/playlists.html');
 });
 
 app.get('/userInfo/:tokens', async (req, res) => {
@@ -196,10 +183,6 @@ app.post('/trackInfo/:tokens', async (req, res) => {
     }
     res.json(tracks);
 
-
-    // const fetch_response = await fetch(`https://api.spotify.com/v1/tracks?ids=${tracks}`, fetch_body);
-    // const json = await fetch_response.json();
-    // res.json(json);
 })
 
 app.post('/trackFeatures/:tokens', async (req, res) => {
