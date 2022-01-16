@@ -2,14 +2,15 @@ const express = require('express'); // Express web server framework
 // const { request } = require('http');
 const fetch = require('node-fetch');
 const { URLSearchParams } = require('url');
-const { config } = require('./config.js');
+// const { config } = require('./config.js');
+require('dotenv').config();
 const querystring = require('querystring');
 const app = express();
 const bodyParser = require('body-parser');
 
-const client_id = config.CLIENT_ID; // Your client id
-const client_secret = config.CLIENT_SECRET; // Your secret
-const redirect_uri = config.REDIRECT_URI; // Your redirect uri
+const client_id = process.env.CLIENT_ID; // Your client id
+const client_secret = process.env.CLIENT_SECRET; // Your secret
+const redirect_uri = process.env.REDIRECT_URI; // Your redirect uri
 
 const PORT = process.env.PORT || 8888
 
