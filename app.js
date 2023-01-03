@@ -12,9 +12,9 @@ const client_id = process.env.CLIENT_ID; // Your client id
 const client_secret = process.env.CLIENT_SECRET; // Your secret
 const redirect_uri = process.env.REDIRECT_URI; // Your redirect uri
 
-const PORT = process.env.PORT || 8888
+const PORT = process.env.PORT || 8889
 
-app.listen(PORT, () => console.log('Spotify Poppin listening at https://localhost:8888'));
+app.listen(PORT, () => console.log('Spotify Poppin listening at http://localhost:8889'));
 app.use(express.static('public'));
 app.use(bodyParser.text());    
 
