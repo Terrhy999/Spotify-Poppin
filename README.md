@@ -13,8 +13,9 @@ Spotify Poppin is a website to sort your spotify playlists by various criteria p
 - Popularity
 
 ## URL
+Hosted on my home server in a Docker container with an NGINX reverse proxy.
 
-https://spotify-poppin.herokuapp.com/
+https://spotify.terrhyland.com
 
 ## Author
 
